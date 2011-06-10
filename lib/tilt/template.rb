@@ -66,6 +66,7 @@ module Tilt
       # load template data and prepare (uses binread to avoid encoding issues)
       @reader = block || lambda { |t| File.respond_to?(:binread) ? File.binread(@file) : File.read(@file) }
       @data = @reader.call(self)
+      modify
       prepare
     end
 
@@ -106,6 +107,13 @@ module Tilt
              "explicit require '#{name}' suggested."
       end
       require name
+    end
+
+    # Do whatever you want with template data
+    # Called immediately after template data is loaded.
+    #
+    # Providing an implementation of this method is optional
+    def modify
     end
 
     # Do whatever preparation is necessary to setup the underlying template

@@ -127,6 +127,21 @@ class TiltTemplateTest < Test::Unit::TestCase
     assert inst.prepared?
   end
 
+  class ModifyDataMockTemplate < PreparingMockTemplate
+    def modify
+      @data = data.gsub(/REMOVE THIS!\n/, '')
+    end
+    def evaluate(scope, locals, &block)
+      @data
+    end
+  end
+
+  test "manipulate data before #prepare" do
+    inst = ModifyDataMockTemplate.new { |t| "REMOVE THIS!\nHello World!" }
+    assert_equal "Hello World!", inst.render
+    assert inst.prepared?
+  end
+
   class Person
     CONSTANT = "Bob"
 
